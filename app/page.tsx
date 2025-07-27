@@ -40,7 +40,7 @@ export default function Home() {
   if (!ready) return <div>Loading...</div>;
 
   if (isPopupMode) {
-    // Popup/Modal style - clean overlay with no background content
+    // Completely transparent overlay - only Privy popup visible
     return (
       <div style={{
         position: 'fixed',
@@ -48,9 +48,7 @@ export default function Home() {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.85)', // Blurry white overlay
-        backdropFilter: 'blur(10px)', // Blur effect
-        WebkitBackdropFilter: 'blur(10px)', // Safari support
+        backgroundColor: 'transparent', // Completely transparent
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
