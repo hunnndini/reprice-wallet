@@ -15,7 +15,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           accentColor: '#007bff', // Your brand color
           logo: 'https://your-logo-url.com/logo.png', // Optional: your logo
           showWalletLoginFirst: true,
-          walletList: ['metamask', 'coinbase_wallet', 'rainbow', 'wallet_connect'], // Limit which wallets show
+          walletList: ['metamask', 'coinbase_wallet', 'rabby_wallet', 'wallet_connect'], // Limit which wallets show
         },
         defaultChain: {
           id: 999,
