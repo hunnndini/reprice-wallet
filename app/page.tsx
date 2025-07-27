@@ -34,11 +34,20 @@ export default function Home() {
 
   if (!ready) return <div>Loading...</div>;
 
+  // Check if running in an iframe (embedded)
+  const isEmbedded = window !== window.parent;
+
   return (
-    <main style={{ padding: 32 }}>
-      <h1>✨ Privy Wallet App</h1>
+    <main style={{ padding: 32, background: isEmbedded ? 'transparent' : 'white' }}>
+      {/* Hide title and content when embedded, just show login */}
+      {!isEmbedded && <h1>✨ Privy Wallet App</h1>}
+      
       {!authenticated ? (
-        <button onClick={login}>Log In</button>
+        <div style={{ textAlign: 'center' }}>
+          {!isEmbedded && <button onClick={login}>Log In</button>}
+          {/* Auto-trigger login when embedded */}
+          {isEmbedded && <div style={{ display: 'none' }}></div>}
+        </div>
       ) : (
         <>
           <p>You are logged in! 🎉</p>
