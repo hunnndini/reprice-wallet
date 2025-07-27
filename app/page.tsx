@@ -40,7 +40,7 @@ export default function Home() {
   if (!ready) return <div>Loading...</div>;
 
   if (isPopupMode) {
-    // Completely transparent overlay - only Privy popup visible
+    // Show the login interface in popup mode
     return (
       <div style={{
         position: 'fixed',
@@ -48,13 +48,68 @@ export default function Home() {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: 'transparent', // Completely transparent
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 9999
       }}>
-        {/* Just the Privy popup will appear here, no other content */}
+        <div style={{
+          backgroundColor: 'white',
+          padding: '2rem',
+          borderRadius: '12px',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+          maxWidth: '400px',
+          width: '90%',
+          textAlign: 'center'
+        }}>
+          {!authenticated ? (
+            <>
+              <h2 style={{ marginBottom: '1rem', color: '#333' }}>Connect Your Wallet</h2>
+              <button 
+                onClick={login}
+                style={{
+                  backgroundColor: '#007bff',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  width: '100%'
+                }}
+              >
+                Connect Wallet
+              </button>
+            </>
+          ) : (
+            <>
+              <h2 style={{ color: '#28a745', marginBottom: '1rem' }}>✅ Wallet Connected!</h2>
+              <p style={{ marginBottom: '1rem', wordBreak: 'break-all' }}>
+                <strong>Address:</strong><br />
+                {user?.wallet?.address}
+              </p>
+              {balance && (
+                <p style={{ marginBottom: '1rem' }}>
+                  <strong>HYPE Balance:</strong> {balance}
+                </p>
+              )}
+              <button 
+                onClick={logout}
+                style={{
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Disconnect
+              </button>
+            </>
+          )}
+        </div>
       </div>
     );
   }
