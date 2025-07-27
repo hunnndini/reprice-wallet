@@ -79,6 +79,7 @@ const styles = {
     backgroundColor: '#1a1a1a',
     backdropFilter: 'blur(10px)',
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    overflow: 'hidden',
   },
   loginButton: {
     backgroundColor: '#ffffff',
