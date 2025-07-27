@@ -139,10 +139,17 @@ const styles = {
 if (typeof document !== 'undefined') {
   const styleSheet = document.createElement('style');
   styleSheet.textContent = `
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
     button:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
     }
+
     button:active {
       transform: translateY(0);
     }
