@@ -37,29 +37,114 @@ export default function Home() {
     }
   }, [authenticated, user]);
 
-  if (!ready) return <div>Loading...</div>;
+  if (!ready) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.loadingText}>Loading...</div>
+      </div>
+    );
+  }
 
-  // Regular page view (works for both popup mode and normal mode)
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      backgroundColor: isPopupMode ? 'rgba(0, 0, 0, 0.8)' : 'white' // Dark background in popup mode
+    <div style={{
+      ...styles.container,
+      backgroundColor: isPopupMode ? 'rgba(0, 0, 0, 0.8)' : styles.container.backgroundColor
     }}>
-      <main style={{ padding: 32 }}>
-        <h1>✨ Privy Wallet App</h1>
-        {!authenticated ? (
-          <button onClick={login}>Log In</button>
-        ) : (
-          <>
-            <p>You are logged in! 🎉</p>
-            <button onClick={logout}>Log Out</button>
-            <p><strong>Wallet Address:</strong><br />{user?.wallet?.address}</p>
-            {balance && (
-              <p><strong>HYPE Balance:</strong> {balance}</p>
-            )}
-          </>
-        )}
-      </main>
+      {!authenticated ? (
+        <button onClick={login} style={styles.loginButton}>
+          Log In
+        </button>
+      ) : (
+        <div style={styles.walletInfo}>
+          <div style={styles.welcomeText}>✨ Connected!</div>
+          <div style={styles.address}>{user?.wallet?.address}</div>
+          {balance && (
+            <div style={styles.balance}>Balance: {balance} HYPE</div>
+          )}
+          <button onClick={logout} style={styles.logoutButton}>
+            Log Out
+          </button>
+        </div>
+      )}
     </div>
   );
+}
+
+const styles = {
+  container: {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1a1a1a',
+    backdropFilter: 'blur(10px)',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  },
+  loginButton: {
+    backgroundColor: '#ffffff',
+    color: '#000000',
+    border: 'none',
+    borderRadius: '12px',
+    padding: '16px 32px',
+    fontSize: '18px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+    minWidth: '160px',
+  } as React.CSSProperties,
+  walletInfo: {
+    textAlign: 'center' as const,
+    color: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    padding: '32px',
+    borderRadius: '16px',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  welcomeText: {
+    fontSize: '24px',
+    fontWeight: '600',
+    marginBottom: '16px',
+  },
+  address: {
+    fontSize: '14px',
+    opacity: 0.8,
+    marginBottom: '12px',
+    wordBreak: 'break-all' as const,
+  },
+  balance: {
+    fontSize: '16px',
+    marginBottom: '24px',
+    fontWeight: '500',
+  },
+  logoutButton: {
+    backgroundColor: 'transparent',
+    color: '#ffffff',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    borderRadius: '8px',
+    padding: '12px 24px',
+    fontSize: '14px',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  } as React.CSSProperties,
+  loadingText: {
+    color: '#ffffff',
+    fontSize: '18px',
+  },
+};
+
+// Add hover effects with a style tag
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = `
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
+    }
+    button:active {
+      transform: translateY(0);
+    }
+  `;
+  document.head.appendChild(styleSheet);
 }
