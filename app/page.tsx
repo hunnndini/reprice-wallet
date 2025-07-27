@@ -15,6 +15,17 @@ export default function Home() {
     setBalance(formatted);
   };
 
+  // Auto-connect logic - this is the new code!
+  useEffect(() => {
+    if (ready && !authenticated) {
+      // Check if URL has connect parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('connect') === 'true') {
+        login(); // Automatically trigger Privy login
+      }
+    }
+  }, [ready, authenticated, login]);
+
   useEffect(() => {
     if (authenticated && user?.wallet?.address) {
       fetchBalance(user.wallet.address);
