@@ -14,28 +14,22 @@ export default function Home() {
     setBalance(formatted);
   };
 
-  // Check if running in an iframe (embedded)
-  const isEmbedded = window !== window.parent;
-
-  // Auto-connect logic when embedded
+  // Check if this was triggered by the connect button (only on client side)
+  const [isPopupMode, setIsPopupMode] = useState(false);
+  
   useEffect(() => {
-    if (ready && !authenticated && isEmbedded) {
-      // Auto-trigger login when embedded
-      login();
+    // This runs only on the client side
+    const urlParams = new URLSearchParams(window.location.search);
+    setIsPopupMode(urlParams.get('connect') === 'true');
+  }, []);
+
+  // Auto-connect logic - this is the new code!
+  useEffect(() => {
+    if (ready && !authenticated && isPopupMode) {
+      // Check if URL has connect parameter
+      login(); // Automatically trigger Privy login
     }
-  }, [ready, authenticated, login, isEmbedded]);
-
-  // Listen for messages from parent window (Framer)
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.action === 'connectWallet') {
-        login();
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [login]);
+  }, [ready, authenticated, login, isPopupMode]);
 
   useEffect(() => {
     if (authenticated && user?.wallet?.address) {
@@ -43,79 +37,31 @@ export default function Home() {
     }
   }, [authenticated, user]);
 
-  if (!ready) return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      height: isEmbedded ? '300px' : '100vh',
-      background: isEmbedded ? 'transparent' : 'white'
-    }}>
-      Loading...
-    </div>
-  );
+  if (!ready) return <div>Loading...</div>;
 
-  if (isEmbedded) {
-    // Embedded view - clean and minimal
+  if (isPopupMode) {
+    // Popup/Modal style - clean overlay with no background content
     return (
       <div style={{
-        background: 'white',
-        borderRadius: '16px',
-        padding: '32px',
-        boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)',
-        margin: '16px',
-        textAlign: 'center',
-        minHeight: '300px',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(255, 255, 255, 0.85)', // Blurry white overlay
+        backdropFilter: 'blur(10px)', // Blur effect
+        WebkitBackdropFilter: 'blur(10px)', // Safari support
         display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 9999
       }}>
-        {!authenticated ? (
-          <div>
-            <h3 style={{ marginBottom: '20px', color: '#333' }}>Connect Your Wallet</h3>
-            <button 
-              onClick={login}
-              style={{
-                backgroundColor: '#6366f1',
-                color: 'white',
-                border: 'none',
-                padding: '14px 28px',
-                borderRadius: '8px',
-                fontSize: '16px',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-            >
-              Connect Wallet
-            </button>
-          </div>
-        ) : (
-          <div>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>✅</div>
-            <h3 style={{ color: '#10b981', marginBottom: '16px' }}>Wallet Connected!</h3>
-            <p style={{ 
-              fontSize: '12px', 
-              color: '#666', 
-              wordBreak: 'break-all',
-              marginBottom: '16px',
-              padding: '8px',
-              background: '#f3f4f6',
-              borderRadius: '6px'
-            }}>
-              {user?.wallet?.address}
-            </p>
-            {balance && (
-              <p style={{ color: '#333', fontSize: '16px', fontWeight: '600' }}>
-                Balance: {balance} HYPE
-              </p>
-            )}
-          </div>
-        )}
+        {/* Just the Privy popup will appear here, no other content */}
       </div>
     );
   }
 
-  // Regular page view (when not embedded)
+  // Regular page view (when not in popup mode)
   return (
     <main style={{ padding: 32 }}>
       <h1>✨ Privy Wallet App</h1>
